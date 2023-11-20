@@ -1,0 +1,48 @@
+name: tasker
+description: A new Flutter project.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.0.6 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_screenutil: ^5.9.0
+  get: ^4.6.5
+  path_provider: ^2.1.1
+  sqflite: ^2.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/translations/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter/Inter-Black.ttf
+        - asset: assets/fonts/Inter/Inter-Bold.ttf
+        - asset: assets/fonts/Inter/Inter-ExtraBold.ttf
+        - asset: assets/fonts/Inter/Inter-ExtraLight.ttf
+        - asset: assets/fonts/Inter/Inter-Light.ttf
+        - asset: assets/fonts/Inter/Inter-Medium.ttf
+        - asset: assets/fonts/Inter/Inter-Regular.ttf
+        - asset: assets/fonts/Inter/Inter-SemiBold.ttf
+        - asset: assets/fonts/Inter/Inter-Thin.ttf
+
+    - family: Roobert
+      fonts:
+        - asset: assets/fonts/Roobert/Roobert-Regular.ttf
+        - asset: assets/fonts/Roobert/RoobertTRIAL-Regular.otf
+        - asset: assets/fonts/Roobert/RoobertTRIAL-RegularItalic.otf
+        - asset: assets/fonts/Roobert/RoobertTRIALVF.ttf
