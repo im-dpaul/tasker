@@ -4,22 +4,21 @@ class TasksModel {
   int? id;
   String? title;
   String? description;
+  String? status;
 
-  TasksModel({
-    this.id,
-    this.title,
-    this.description,
-  });
+  TasksModel({this.id, this.title, this.description, this.status});
 
   TasksModel copyWith({
     int? id,
     String? title,
     String? description,
+    String? status,
   }) {
     return TasksModel(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
+      status: status ?? this.status,
     );
   }
 
@@ -28,6 +27,7 @@ class TasksModel {
       'id': id,
       'title': title,
       'description': description,
+      'status': status,
     };
   }
 
@@ -37,6 +37,7 @@ class TasksModel {
       title: map['title'] != null ? map['title'] as String : null,
       description:
           map['description'] != null ? map['description'] as String : null,
+      status: map['status'] != null ? map['status'] as String : null,
     );
   }
 
@@ -46,8 +47,9 @@ class TasksModel {
       TasksModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() =>
-      'TaskModel(id: $id, title: $title, description: $description)';
+  String toString() {
+    return 'TasksModel(id: $id, title: $title, description: $description, status: $status)';
+  }
 
   @override
   bool operator ==(covariant TasksModel other) {
@@ -55,9 +57,15 @@ class TasksModel {
 
     return other.id == id &&
         other.title == title &&
-        other.description == description;
+        other.description == description &&
+        other.status == status;
   }
 
   @override
-  int get hashCode => id.hashCode ^ title.hashCode ^ description.hashCode;
+  int get hashCode {
+    return id.hashCode ^
+        title.hashCode ^
+        description.hashCode ^
+        status.hashCode;
+  }
 }

@@ -21,10 +21,10 @@ class _TasksScreenState extends State<TasksScreen> {
         vertical: 12.h,
       ),
       decoration: BoxDecoration(
-        color: AppColors.lightGrey,
+        color: AppColors.snowDrift,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.base,
+          color: AppColors.tuna,
           width: 1,
         ),
       ),
