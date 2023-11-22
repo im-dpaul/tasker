@@ -8,6 +8,7 @@ class AppColors {
 
   static const Color textBlack = Color(0xFF111111);
   static const Color lightGrey = Color(0xFFD6DBD4);
+  static const Color lightGrey2 = Color(0xFFA7AAA5);
   static const Color smokyGrey = Color(0xFF717171);
   static const Color snowDrift = Color(0xFFF9F9F9);
   static const Color tuna = Color(0xff2F384C);

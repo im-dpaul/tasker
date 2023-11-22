@@ -10,11 +10,32 @@ class AppTextStyles {
     fontWeight: FontWeight.w700,
   );
 
+  static TextStyle f20w600TextBlack = TextStyle(
+    color: AppColors.textBlack,
+    fontSize: 20.textMultiplier,
+    fontFamily: 'Inter-Bold',
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle f16w600TextBlack = TextStyle(
+    color: AppColors.textBlack,
+    fontSize: 16.textMultiplier,
+    fontFamily: 'Inter-Bold',
+    fontWeight: FontWeight.w600,
+  );
+
   static TextStyle f14w600TextBlack = TextStyle(
     color: AppColors.textBlack,
     fontSize: 14.textMultiplier,
     fontFamily: 'Inter-Bold',
     fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle f14w400TextBlack = TextStyle(
+    color: AppColors.textBlack,
+    fontSize: 14.textMultiplier,
+    fontFamily: 'Inter-Bold',
+    fontWeight: FontWeight.w400,
   );
 
   static TextStyle f12w400SmokyGrey = TextStyle(

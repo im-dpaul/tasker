@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tasker/core/extensions/size_extension.dart';
+import 'package:tasker/core/routes/app_routes.dart';
 import 'package:tasker/core/theme/app_colors.dart';
 import 'package:tasker/features/tasks/controller/tasks_controller.dart';
 import 'package:tasker/features/tasks/widgets/task_card.dart';
@@ -59,9 +60,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       tasksController.tasksList[index].status ?? ''),
                   color: tasksController
                       .getColor(tasksController.tasksList[index].status ?? ''),
-                  onTap: () {
-                    tasksController
-                        .updateTask(tasksController.tasksList[index].id ?? 0);
+                  onTap: () async {
+                    final value = await Navigator.of(context).pushNamed(
+                        AppRoutes.addUpdateTasksScreen,
+                        arguments: tasksController.tasksList[index]);
+                    if (value == true) {
+                      tasksController.getTasks();
+                    }
                   },
                   onLongPress: () {
                     tasksController.setEnableSelection(
@@ -110,11 +115,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   if (tasksController.enableSelection.value) {
-                    tasksController.deleteMultipleTask();
+                    if (tasksController.selectedTasksId.isNotEmpty) {
+                      tasksController.deleteMultipleTask();
+                    }
                   } else {
-                    tasksController.addTask();
+                    final value = await Navigator.of(context)
+                        .pushNamed(AppRoutes.addUpdateTasksScreen);
+
+                    if (value == true) {
+                      tasksController.getTasks();
+                    }
                   }
                 },
                 child: Container(

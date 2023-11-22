@@ -16,24 +16,6 @@ class TasksController extends GetxController {
     tasksList.value = tasksList.reversed.toList();
   }
 
-  addTask() async {
-    await dbProvider.insert(
-      TasksModel(
-          title:
-              'This app is dedicated to all the workers who want to log there work for long time.',
-          description: 'Lorem ipsum dolor sit amet.',
-          status: 'NOT_STARTED'),
-    );
-    await getTasks();
-  }
-
-  updateTask(int id) async {
-    await dbProvider.update(
-      TasksModel(id: id, title: "Updated Title", status: 'IN_PROGRESS'),
-    );
-    await getTasks();
-  }
-
   deleteTask(int id) async {
     await dbProvider.delete(id);
     enableSelection.value = false;

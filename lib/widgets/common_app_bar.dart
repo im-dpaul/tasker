@@ -6,20 +6,26 @@ import 'package:tasker/core/theme/app_text_styles.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
+  final TextStyle? titleStyle;
   final double? elevation;
   final Color? backgroundColor;
   final List<Widget>? actions;
   final Widget? leadingWidget;
   final double? leadingWidth;
+  final bool? backButton;
+  final void Function()? backButtonOnTap;
 
   const CommonAppBar({
     super.key,
     this.title,
+    this.titleStyle,
     this.elevation,
     this.backgroundColor,
     this.actions,
     this.leadingWidget,
     this.leadingWidth,
+    this.backButton,
+    this.backButtonOnTap,
   });
 
   @override
@@ -28,20 +34,33 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: title != null
           ? Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: 8.w,
+                horizontal: (backButton == true) ? 0 : 8.w,
                 vertical: 6.h,
               ),
               child: Text(
                 title!,
-                style: AppTextStyles.f24w700TextBlack,
+                style: titleStyle ?? AppTextStyles.f24w700TextBlack,
               ),
             )
           : null,
       backgroundColor: backgroundColor ?? AppColors.white,
       elevation: elevation ?? 0,
       bottomOpacity: 0,
-      leading: leadingWidget,
-      leadingWidth: leadingWidth ?? 42,
+      leading: (backButton == true)
+          ? Container(
+              padding: EdgeInsets.only(left: 12.w),
+              child: GestureDetector(
+                onTap: backButtonOnTap,
+                child: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  size: 24,
+                  color: AppColors.black,
+                ),
+              ),
+            )
+          : leadingWidget,
+      leadingWidth: leadingWidth ?? ((backButton == true) ? 36 : 52),
+      automaticallyImplyLeading: false,
       systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarColor: AppColors.white,
         statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
