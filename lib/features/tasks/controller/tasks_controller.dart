@@ -9,6 +9,7 @@ class TasksController extends GetxController {
   DBProvider dbProvider = DBProvider();
   RxBool enableSelection = RxBool(false);
   RxList<TasksModel> tasksList = <TasksModel>[].obs;
+  RxList<int> selectedTasksId = RxList([]);
 
   getTasks() async {
     tasksList.value = await dbProvider.getTasks();
@@ -18,33 +19,57 @@ class TasksController extends GetxController {
   addTask() async {
     await dbProvider.insert(
       TasksModel(
-          title: 'Lorem',
-          description:
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-          status: 'IN_PROGRESS'),
+          title:
+              'This app is dedicated to all the workers who want to log there work for long time.',
+          description: 'Lorem ipsum dolor sit amet.',
+          status: 'NOT_STARTED'),
     );
     await getTasks();
   }
 
   updateTask(int id) async {
     await dbProvider.update(
-      TasksModel(
-          id: id,
-          title: "Updated Title",
-          description:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
-          status: 'FINISHED'),
+      TasksModel(id: id, title: "Updated Title", status: 'IN_PROGRESS'),
     );
     await getTasks();
   }
 
   deleteTask(int id) async {
     await dbProvider.delete(id);
+    enableSelection.value = false;
     await getTasks();
   }
 
-  setEnableSelection(bool value) {
+  deleteMultipleTask() async {
+    await dbProvider.deleteMany(selectedTasksId);
+    enableSelection.value = false;
+    await getTasks();
+  }
+
+  setEnableSelection({required bool value, int? id}) {
     enableSelection.value = value;
+    if (value) {
+      if (id != null) {
+        selectedTasksId.add(id);
+      }
+    } else {
+      selectedTasksId.clear();
+    }
+  }
+
+  addToSelectedList(int id) {
+    if (selectedTasksId.contains(id)) {
+      selectedTasksId.remove(id);
+    } else {
+      selectedTasksId.add(id);
+    }
+  }
+
+  bool checkSelection(int id) {
+    if (selectedTasksId.contains(id)) {
+      return true;
+    }
+    return false;
   }
 
   String getTaskStatus(String sts) {

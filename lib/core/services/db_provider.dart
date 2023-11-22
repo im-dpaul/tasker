@@ -56,6 +56,16 @@ class DBProvider {
     );
   }
 
+  Future<void> deleteMany(List<int> idList) async {
+    Database? dbClient = await database;
+
+    await dbClient!.delete(
+      'tasks',
+      where: 'id IN (${List.filled(idList.length, '?').join(',')})',
+      whereArgs: idList,
+    );
+  }
+
   Future<void> update(TasksModel taskModel) async {
     Database? dbClient = await database;
 

@@ -36,47 +36,86 @@ class _HomeScreenState extends State<HomeScreen> {
             vertical: 8.h,
             horizontal: 8.w,
           ),
-          child: ListView.separated(
-            itemCount: tasksController.tasksList.length,
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 8.w),
-            itemBuilder: (context, index) {
-              return TaskCard(
-                id: tasksController.tasksList[index].id ?? 0,
-                title: tasksController.tasksList[index].title ?? '',
-                description: tasksController.truncateDescription(
-                    tasksController.tasksList[index].description),
-                status: tasksController.getTaskStatus(
-                    tasksController.tasksList[index].status ?? ''),
-                color: tasksController
-                    .getColor(tasksController.tasksList[index].status ?? ''),
-                selectionEnabled: tasksController.enableSelection.value,
-                selected: false,
-                onTap: () {
-                  tasksController
-                      .updateTask(tasksController.tasksList[index].id ?? 0);
-                },
-                onLongPress: () {
-                  tasksController.setEnableSelection(true);
-                  // tasksController
-                  //     .deleteTask(tasksController.tasksList[index].id ?? 0);
-                },
-              );
+          child: WillPopScope(
+            onWillPop: () async {
+              if (tasksController.enableSelection.value) {
+                tasksController.setEnableSelection(value: false);
+                return false;
+              } else {
+                return true;
+              }
             },
-            separatorBuilder: (context, index) =>
-                const CustomSizedBox(height: 16),
+            child: ListView.separated(
+              itemCount: tasksController.tasksList.length,
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 8.w),
+              itemBuilder: (context, index) {
+                return TaskCard(
+                  id: tasksController.tasksList[index].id ?? 0,
+                  title: tasksController.tasksList[index].title ?? '',
+                  description: tasksController.truncateDescription(
+                      tasksController.tasksList[index].description),
+                  status: tasksController.getTaskStatus(
+                      tasksController.tasksList[index].status ?? ''),
+                  color: tasksController
+                      .getColor(tasksController.tasksList[index].status ?? ''),
+                  onTap: () {
+                    tasksController
+                        .updateTask(tasksController.tasksList[index].id ?? 0);
+                  },
+                  onLongPress: () {
+                    tasksController.setEnableSelection(
+                        value: true, id: tasksController.tasksList[index].id);
+                  },
+                );
+              },
+              separatorBuilder: (context, index) =>
+                  const CustomSizedBox(height: 16),
+            ),
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Obx(
-        () => Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Visibility(
-              visible: tasksController.enableSelection.value,
-              child: GestureDetector(
+        () => Container(
+          padding: EdgeInsets.only(bottom: 16.h),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Visibility(
+                visible: tasksController.enableSelection.value,
+                child: GestureDetector(
+                  onTap: () {
+                    tasksController.setEnableSelection(value: false);
+                  },
+                  child: Container(
+                    height: 50.h,
+                    width: 50.w,
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 8.h,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: AppColors.clearBlue,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30),
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      size: 28,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
                 onTap: () {
-                  tasksController.setEnableSelection(false);
+                  if (tasksController.enableSelection.value) {
+                    tasksController.deleteMultipleTask();
+                  } else {
+                    tasksController.addTask();
+                  }
                 },
                 child: Container(
                   height: 50.h,
@@ -85,52 +124,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     horizontal: 8.w,
                     vertical: 8.h,
                   ),
-                  decoration: const BoxDecoration(
-                    color: AppColors.clearBlue,
-                    borderRadius: BorderRadius.all(
+                  decoration: BoxDecoration(
+                    color: tasksController.enableSelection.value
+                        ? AppColors.lightRed
+                        : AppColors.mediumGreen,
+                    borderRadius: const BorderRadius.all(
                       Radius.circular(30),
                     ),
                   ),
-                  child: const Icon(
-                    Icons.close,
+                  child: Icon(
+                    tasksController.enableSelection.value
+                        ? Icons.delete_outline_outlined
+                        : Icons.add,
                     size: 28,
                     color: AppColors.white,
                   ),
                 ),
               ),
-            ),
-            GestureDetector(
-              onTap: () {
-                if (tasksController.enableSelection.value) {
-                } else {
-                  tasksController.addTask();
-                }
-              },
-              child: Container(
-                height: 50.h,
-                width: 50.w,
-                margin: EdgeInsets.symmetric(
-                  horizontal: 8.w,
-                  vertical: 8.h,
-                ),
-                decoration: BoxDecoration(
-                  color: tasksController.enableSelection.value
-                      ? AppColors.lightRed
-                      : AppColors.mediumGreen,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(30),
-                  ),
-                ),
-                child: Icon(
-                  tasksController.enableSelection.value
-                      ? Icons.delete_outline_outlined
-                      : Icons.add,
-                  size: 28,
-                  color: AppColors.white,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
