@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tasker/core/constants/constants.dart';
 import 'package:tasker/core/services/db_provider.dart';
-import 'package:tasker/core/theme/app_colors.dart';
 import 'package:tasker/features/tasks/models/tasks_model.dart';
 
 class TasksController extends GetxController {
@@ -52,29 +49,6 @@ class TasksController extends GetxController {
       return true;
     }
     return false;
-  }
-
-  String getTaskStatus(String sts) {
-    String status = Constants.taskStatus[sts] ?? 'Not Started';
-    return status;
-  }
-
-  Color getColor(String sts) {
-    final status = getTaskStatus(sts);
-
-    if (status == Constants.taskStatus['IN_PROGRESS']) {
-      return AppColors.tronBlue;
-    } else if (status == Constants.taskStatus['ON_HOLD']) {
-      return AppColors.smokyGrey;
-    } else if (status == Constants.taskStatus['PENDING']) {
-      return AppColors.tangerin;
-    } else if (status == Constants.taskStatus['FINISHED']) {
-      return AppColors.babyGreen;
-    } else if (status == Constants.taskStatus['NOT_STARTED']) {
-      return AppColors.brightLavender;
-    } else {
-      return AppColors.clearBlue;
-    }
   }
 
   String truncateDescription(String? description) {

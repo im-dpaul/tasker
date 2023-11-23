@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tasker/core/constants/constants.dart';
 import 'package:tasker/core/services/db_provider.dart';
+import 'package:tasker/core/utils/common_functions.dart';
 import 'package:tasker/features/tasks/models/tasks_model.dart';
 
 class AddUpdateTasksController extends GetxController {
@@ -26,6 +28,17 @@ class AddUpdateTasksController extends GetxController {
       }
       if (tasksModel.status != null) {
         taskStatus.value = tasksModel.status ?? '';
+      }
+    }
+  }
+
+  setTaskStatus(String? value) {
+    if (value != null) {
+      String key =
+          getKeyFromValue(Constants.taskStatus, value) ?? "NOT_STARTED";
+      if (key != taskStatus.value) {
+        taskStatus.value = key;
+        checkValidation();
       }
     }
   }

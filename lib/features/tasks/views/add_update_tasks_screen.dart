@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tasker/core/constants/constants.dart';
 import 'package:tasker/core/extensions/size_extension.dart';
 import 'package:tasker/core/responsive/size_config.dart';
 import 'package:tasker/core/theme/app_colors.dart';
 import 'package:tasker/core/theme/app_text_styles.dart';
+import 'package:tasker/core/utils/common_functions.dart';
 import 'package:tasker/features/tasks/controller/add_update_tasks_controller.dart';
 import 'package:tasker/features/tasks/models/tasks_model.dart';
 import 'package:tasker/widgets/app_button.dart';
@@ -32,9 +34,7 @@ class _AddUpdateTasksScreenState extends State<AddUpdateTasksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CommonAppBar(
-        title: (addUpdateTasksController.taskId.value == -1)
-            ? 'Add Task'
-            : 'Update Task',
+        title: (addUpdateTasksController.taskId.value == -1) ? 'Add Task' : '',
         titleStyle: AppTextStyles.f16w600TextBlack,
         backButton: true,
         backButtonOnTap: () {
@@ -43,97 +43,162 @@ class _AddUpdateTasksScreenState extends State<AddUpdateTasksScreen> {
         },
       ),
       body: Obx(
-        () => Container(
-          color: AppColors.white,
-          child: Stack(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 8.w,
-                  vertical: 8.h,
-                ),
-                child: Column(
-                  children: [
-                    AppTextField(
-                      controller: addUpdateTasksController.titleController,
-                      style: AppTextStyles.f16w600TextBlack,
-                      hintText: 'Title',
-                      hintStyle: AppTextStyles.f16w600TextBlack
-                          .copyWith(color: AppColors.lightGrey2),
-                      maxLines: null,
-                      maxLength: 75,
-                      errorText: null,
-                      onChanged: (title) {
-                        addUpdateTasksController.checkValidation();
-                      },
+        () => SafeArea(
+          child: Container(
+            color: AppColors.white,
+            height: SizeConfig.screenHeight,
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 8.h,
                     ),
-                    const CustomSizedBox(height: 2),
-                    AppTextField(
-                      controller:
-                          addUpdateTasksController.descriptionController,
-                      style: AppTextStyles.f14w600TextBlack
-                          .copyWith(color: AppColors.smokyGrey),
-                      hintText: 'Description',
-                      hintStyle: AppTextStyles.f14w600TextBlack
-                          .copyWith(color: AppColors.lightGrey2),
-                      maxLines: null,
-                      // maxLength: 300,
-                      errorText: null,
-                      onChanged: (description) {
-                        addUpdateTasksController.checkValidation();
-                      },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AppTextField(
+                          controller: addUpdateTasksController.titleController,
+                          style: AppTextStyles.f16w600TextBlack,
+                          hintText: 'Title',
+                          hintStyle: AppTextStyles.f16w600TextBlack
+                              .copyWith(color: AppColors.lightGrey2),
+                          maxLines: null,
+                          maxLength: 75,
+                          errorText: null,
+                          onChanged: (title) {
+                            addUpdateTasksController.checkValidation();
+                          },
+                        ),
+                        const CustomSizedBox(height: 2),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Status:',
+                                style: AppTextStyles.f12w400SmokyGrey,
+                              ),
+                              const CustomSizedBox(width: 8),
+                              DropdownButton(
+                                value: getTaskStatus(
+                                    addUpdateTasksController.taskStatus.value),
+                                icon: const Icon(
+                                  Icons.arrow_drop_down_circle_outlined,
+                                  size: 18,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                underline: const SizedBox(),
+                                items: Constants.taskStatus.values
+                                    .map((String item) {
+                                  return DropdownMenuItem(
+                                    value: item,
+                                    child: Text(
+                                      item,
+                                      style: AppTextStyles.f12w400SmokyGrey
+                                          .copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                                selectedItemBuilder: (context) {
+                                  return Constants.taskStatus.values
+                                      .map((String item) {
+                                    return Center(
+                                      child: Text(
+                                        '$item ',
+                                        style: AppTextStyles.f12w400SmokyGrey
+                                            .copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: getColor(
+                                              addUpdateTasksController
+                                                  .taskStatus.value),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList();
+                                },
+                                onChanged: (value) {
+                                  addUpdateTasksController.setTaskStatus(value);
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                        const CustomSizedBox(height: 12),
+                        AppTextField(
+                          controller:
+                              addUpdateTasksController.descriptionController,
+                          style: AppTextStyles.f14w600TextBlack
+                              .copyWith(color: AppColors.smokyGrey),
+                          hintText: 'Description',
+                          hintStyle: AppTextStyles.f14w600TextBlack
+                              .copyWith(color: AppColors.lightGrey2),
+                          maxLines: null,
+                          // maxLength: 300,
+                          errorText: null,
+                          onChanged: (description) {
+                            addUpdateTasksController.checkValidation();
+                          },
+                        ),
+                        const CustomSizedBox(height: 100),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                child: Container(
-                  // height: 60.h,
-                  width: SizeConfig.screenWidth,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.black.withOpacity(0.1),
-                        spreadRadius: 4,
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      )
-                    ],
                   ),
-                  child: Center(
-                    child: AppButton(
-                      title: (addUpdateTasksController.taskId.value == -1)
-                          ? 'Save'
-                          : 'Update',
-                      enabled: addUpdateTasksController.validated.value,
-                      onTap: () async {
-                        if (addUpdateTasksController.validated.value) {
-                          bool result = false;
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    // height: 60.h,
+                    width: SizeConfig.screenWidth,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.black.withOpacity(0.1),
+                          spreadRadius: 4,
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        )
+                      ],
+                    ),
+                    child: Center(
+                      child: AppButton(
+                        title: (addUpdateTasksController.taskId.value == -1)
+                            ? 'Save'
+                            : 'Update',
+                        enabled: addUpdateTasksController.validated.value,
+                        onTap: () async {
+                          if (addUpdateTasksController.validated.value) {
+                            bool result = false;
 
-                          if (addUpdateTasksController.taskId.value == -1) {
-                            result = await addUpdateTasksController.addTask();
-                          } else {
-                            result =
-                                await addUpdateTasksController.updateTask();
-                          }
+                            if (addUpdateTasksController.taskId.value == -1) {
+                              result = await addUpdateTasksController.addTask();
+                            } else {
+                              result =
+                                  await addUpdateTasksController.updateTask();
+                            }
 
-                          if (result) {
-                            // ignore: use_build_context_synchronously
-                            Navigator.of(context).pop<bool>(true);
+                            if (result) {
+                              // ignore: use_build_context_synchronously
+                              Navigator.of(context).pop<bool>(true);
+                            }
                           }
-                        }
-                      },
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

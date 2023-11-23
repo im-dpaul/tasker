@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:tasker/core/extensions/size_extension.dart';
 import 'package:tasker/core/routes/app_routes.dart';
 import 'package:tasker/core/theme/app_colors.dart';
+import 'package:tasker/core/utils/common_functions.dart';
 import 'package:tasker/features/tasks/controller/tasks_controller.dart';
 import 'package:tasker/features/tasks/widgets/task_card.dart';
 import 'package:tasker/widgets/common_app_bar.dart';
@@ -49,18 +50,24 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView.separated(
               itemCount: tasksController.tasksList.length,
               physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 8.w),
+              padding: EdgeInsets.only(
+                top: 16.h,
+                right: 8.w,
+                bottom: 108.h,
+                left: 8.w,
+              ),
               itemBuilder: (context, index) {
                 return TaskCard(
                   id: tasksController.tasksList[index].id ?? 0,
                   title: tasksController.tasksList[index].title ?? '',
                   description: tasksController.truncateDescription(
                       tasksController.tasksList[index].description),
-                  status: tasksController.getTaskStatus(
+                  status: getTaskStatus(
                       tasksController.tasksList[index].status ?? ''),
-                  color: tasksController
-                      .getColor(tasksController.tasksList[index].status ?? ''),
+                  color:
+                      getColor(tasksController.tasksList[index].status ?? ''),
                   onTap: () async {
+                    tasksController.setEnableSelection(value: false);
                     final value = await Navigator.of(context).pushNamed(
                         AppRoutes.addUpdateTasksScreen,
                         arguments: tasksController.tasksList[index]);
