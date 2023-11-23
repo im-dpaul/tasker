@@ -43,7 +43,7 @@ class AddUpdateTasksController extends GetxController {
     }
   }
 
-  clearTextController() {
+  clearData() {
     titleController.clear();
     descriptionController.clear();
     taskId.value = -1;
@@ -68,7 +68,7 @@ class AddUpdateTasksController extends GetxController {
           status: taskStatus.value,
         ),
       );
-      clearTextController();
+      clearData();
       return true;
     } catch (e) {
       log('Error in addTask -> $e', name: 'Error');
@@ -86,10 +86,21 @@ class AddUpdateTasksController extends GetxController {
           status: taskStatus.value,
         ),
       );
-      clearTextController();
+      clearData();
       return true;
     } catch (e) {
       log('Error in updateTask -> $e', name: 'Error');
+      return false;
+    }
+  }
+
+  Future<bool> deleteTask() async {
+    try {
+      await dbProvider.delete(taskId.value);
+      clearData();
+      return true;
+    } catch (e) {
+      log('Error in deleteTask -> $e', name: 'Error');
       return false;
     }
   }

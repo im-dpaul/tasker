@@ -38,9 +38,46 @@ class _AddUpdateTasksScreenState extends State<AddUpdateTasksScreen> {
         titleStyle: AppTextStyles.f16w600TextBlack,
         backButton: true,
         backButtonOnTap: () {
-          addUpdateTasksController.clearTextController();
+          addUpdateTasksController.clearData();
           Navigator.of(context).pop<bool>(false);
         },
+        actions: [
+          Obx(
+            () => Visibility(
+              visible: (addUpdateTasksController.taskId.value != -1),
+              child: Row(
+                children: [
+                  // const CustomSizedBox(width: 10),
+                  // GestureDetector(
+                  //   onTap: () {},
+                  //   child: const Icon(
+                  //     Icons.share_rounded,
+                  //     size: 24,
+                  //     color: AppColors.black,
+                  //   ),
+                  // ),
+                  // const CustomSizedBox(width: 16),
+                  GestureDetector(
+                    onTap: () async {
+                      final result =
+                          await addUpdateTasksController.deleteTask();
+                      if (result) {
+                        // ignore: use_build_context_synchronously
+                        Navigator.of(context).pop<bool>(true);
+                      }
+                    },
+                    child: const Icon(
+                      Icons.delete_outline_outlined,
+                      size: 26,
+                      color: AppColors.lightRed,
+                    ),
+                  ),
+                  const CustomSizedBox(width: 16),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
       body: Obx(
         () => SafeArea(

@@ -13,12 +13,6 @@ class TasksController extends GetxController {
     tasksList.value = tasksList.reversed.toList();
   }
 
-  deleteTask(int id) async {
-    await dbProvider.delete(id);
-    enableSelection.value = false;
-    await getTasks();
-  }
-
   deleteMultipleTask() async {
     await dbProvider.deleteMany(selectedTasksId);
     enableSelection.value = false;
