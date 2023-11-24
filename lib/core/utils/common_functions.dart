@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tasker/core/constants/constants.dart';
 import 'package:tasker/core/theme/app_colors.dart';
 
@@ -32,4 +33,20 @@ String? getKeyFromValue(Map<String, String> map, String targetValue) {
     }
   }
   return null; // Return null if the value is not found
+}
+
+String getDateTime(String date) {
+  String dateTime = '';
+  DateTime localDateTime = DateTime.parse(date).toLocal();
+  int difference = localDateTime.difference(DateTime.now()).inDays;
+
+  if (difference == 0) {
+    dateTime = DateFormat('hh:mm a').format(localDateTime);
+  } else if (difference >= 365) {
+    dateTime = DateFormat('dd MMM, yyyy').format(localDateTime);
+  } else {
+    dateTime = DateFormat('dd MMM').format(localDateTime);
+  }
+
+  return dateTime;
 }

@@ -5,6 +5,7 @@ import 'package:tasker/core/routes/app_routes.dart';
 import 'package:tasker/core/theme/app_colors.dart';
 import 'package:tasker/core/utils/common_functions.dart';
 import 'package:tasker/features/tasks/controller/tasks_controller.dart';
+import 'package:tasker/features/tasks/widgets/add_tasks_text_widget.dart';
 import 'package:tasker/features/tasks/widgets/task_card.dart';
 import 'package:tasker/widgets/common_app_bar.dart';
 import 'package:tasker/widgets/custom_sized_box.dart';
@@ -47,43 +48,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 return true;
               }
             },
-            child: ListView.separated(
-              itemCount: tasksController.tasksList.length,
-              physics: const BouncingScrollPhysics(),
-              padding: EdgeInsets.only(
-                top: 16.h,
-                right: 8.w,
-                bottom: 108.h,
-                left: 8.w,
-              ),
-              itemBuilder: (context, index) {
-                return TaskCard(
-                  id: tasksController.tasksList[index].id ?? 0,
-                  title: tasksController.tasksList[index].title ?? '',
-                  description: tasksController.truncateDescription(
-                      tasksController.tasksList[index].description),
-                  status: getTaskStatus(
-                      tasksController.tasksList[index].status ?? ''),
-                  color:
-                      getColor(tasksController.tasksList[index].status ?? ''),
-                  onTap: () async {
-                    tasksController.setEnableSelection(value: false);
-                    final value = await Navigator.of(context).pushNamed(
-                        AppRoutes.addUpdateTasksScreen,
-                        arguments: tasksController.tasksList[index]);
-                    if (value == true) {
-                      tasksController.getTasks();
-                    }
-                  },
-                  onLongPress: () {
-                    tasksController.setEnableSelection(
-                        value: true, id: tasksController.tasksList[index].id);
-                  },
-                );
-              },
-              separatorBuilder: (context, index) =>
-                  const CustomSizedBox(height: 16),
-            ),
+            child: tasksController.tasksList.isNotEmpty
+                ? ListView.separated(
+                    itemCount: tasksController.tasksList.length,
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.only(
+                      top: 16.h,
+                      right: 8.w,
+                      bottom: 108.h,
+                      left: 8.w,
+                    ),
+                    itemBuilder: (context, index) {
+                      return TaskCard(
+                        id: tasksController.tasksList[index].id ?? 0,
+                        title: tasksController.tasksList[index].title ?? '',
+                        description: tasksController.truncateDescription(
+                            tasksController.tasksList[index].description),
+                        status: getTaskStatus(
+                            tasksController.tasksList[index].status ?? ''),
+                        color: getColor(
+                            tasksController.tasksList[index].status ?? ''),
+                        onTap: () async {
+                          tasksController.setEnableSelection(value: false);
+                          final value = await Navigator.of(context).pushNamed(
+                              AppRoutes.addUpdateTasksScreen,
+                              arguments: tasksController.tasksList[index]);
+                          if (value == true) {
+                            tasksController.getTasks();
+                          }
+                        },
+                        onLongPress: () {
+                          tasksController.setEnableSelection(
+                              value: true,
+                              id: tasksController.tasksList[index].id);
+                        },
+                      );
+                    },
+                    separatorBuilder: (context, index) =>
+                        const CustomSizedBox(height: 16),
+                  )
+                : const AddTasksTextWidget(),
           ),
         ),
       ),

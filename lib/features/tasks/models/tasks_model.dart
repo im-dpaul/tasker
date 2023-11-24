@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class TasksModel {
@@ -5,20 +6,33 @@ class TasksModel {
   String? title;
   String? description;
   String? status;
+  String? createdAt;
+  String? updatedAt;
 
-  TasksModel({this.id, this.title, this.description, this.status});
+  TasksModel({
+    this.id,
+    this.title,
+    this.description,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   TasksModel copyWith({
     int? id,
     String? title,
     String? description,
     String? status,
+    String? createdAt,
+    String? updatedAt,
   }) {
     return TasksModel(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
       status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -28,6 +42,8 @@ class TasksModel {
       'title': title,
       'description': description,
       'status': status,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
     };
   }
 
@@ -38,6 +54,8 @@ class TasksModel {
       description:
           map['description'] != null ? map['description'] as String : null,
       status: map['status'] != null ? map['status'] as String : null,
+      createdAt: map['createdAt'] != null ? map['createdAt'] as String : null,
+      updatedAt: map['updatedAt'] != null ? map['updatedAt'] as String : null,
     );
   }
 
@@ -48,7 +66,7 @@ class TasksModel {
 
   @override
   String toString() {
-    return 'TasksModel(id: $id, title: $title, description: $description, status: $status)';
+    return 'TasksModel(id: $id, title: $title, description: $description, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -58,7 +76,9 @@ class TasksModel {
     return other.id == id &&
         other.title == title &&
         other.description == description &&
-        other.status == status;
+        other.status == status &&
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt;
   }
 
   @override
@@ -66,6 +86,8 @@ class TasksModel {
     return id.hashCode ^
         title.hashCode ^
         description.hashCode ^
-        status.hashCode;
+        status.hashCode ^
+        createdAt.hashCode ^
+        updatedAt.hashCode;
   }
 }

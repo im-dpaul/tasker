@@ -11,7 +11,10 @@ class AddUpdateTasksController extends GetxController {
   DBProvider dbProvider = DBProvider();
   RxInt taskId = RxInt(-1);
   RxString taskStatus = RxString('NOT_STARTED');
+  RxString createdAt = RxString('');
+  RxString updatedAt = RxString('');
   RxBool validated = RxBool(false);
+  RxBool creationTimeVisibility = RxBool(false);
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
@@ -29,6 +32,13 @@ class AddUpdateTasksController extends GetxController {
       if (tasksModel.status != null) {
         taskStatus.value = tasksModel.status ?? '';
       }
+      if (tasksModel.createdAt != null) {
+        createdAt.value = tasksModel.createdAt ?? '';
+      }
+      if (tasksModel.updatedAt != null) {
+        updatedAt.value = tasksModel.updatedAt ?? '';
+      }
+      setCreationTimeVisibility();
     }
   }
 
@@ -43,12 +53,36 @@ class AddUpdateTasksController extends GetxController {
     }
   }
 
+  setCreationTimeVisibility() {
+    if (taskId.value != -1) {
+      if (createdAt.value != '' || updatedAt.value != '') {
+        creationTimeVisibility.value = true;
+        return;
+      }
+      creationTimeVisibility.value = false;
+    } else {
+      creationTimeVisibility.value = false;
+    }
+  }
+
+  String setDateTime() {
+    String dateTime = '';
+    if (updatedAt.value.isNotEmpty) {
+      dateTime = getDateTime(updatedAt.value);
+    } else if (createdAt.value.isNotEmpty) {
+      dateTime = getDateTime(createdAt.value);
+    }
+    return dateTime;
+  }
+
   clearData() {
     titleController.clear();
     descriptionController.clear();
     taskId.value = -1;
     taskStatus.value = 'NOT_STARTED';
     validated.value = false;
+    createdAt.value = '';
+    updatedAt.value = '';
   }
 
   checkValidation() {
@@ -59,6 +93,11 @@ class AddUpdateTasksController extends GetxController {
     }
   }
 
+  String getCurrentTime() {
+    DateTime currentUtcTime = DateTime.now().toUtc();
+    return currentUtcTime.toString();
+  }
+
   Future<bool> addTask() async {
     try {
       await dbProvider.insert(
@@ -66,6 +105,7 @@ class AddUpdateTasksController extends GetxController {
           title: titleController.text,
           description: descriptionController.text,
           status: taskStatus.value,
+          createdAt: getCurrentTime(),
         ),
       );
       clearData();
@@ -84,6 +124,8 @@ class AddUpdateTasksController extends GetxController {
           title: titleController.text,
           description: descriptionController.text,
           status: taskStatus.value,
+          createdAt: createdAt.value,
+          updatedAt: getCurrentTime(),
         ),
       );
       clearData();

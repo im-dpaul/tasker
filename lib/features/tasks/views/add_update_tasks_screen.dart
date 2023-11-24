@@ -166,6 +166,30 @@ class _AddUpdateTasksScreenState extends State<AddUpdateTasksScreen> {
                             ],
                           ),
                         ),
+                        Visibility(
+                          visible: addUpdateTasksController
+                              .creationTimeVisibility.value,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  addUpdateTasksController.updatedAt.value == ''
+                                      ? 'Created on:'
+                                      : 'Updated on:',
+                                  style: AppTextStyles.f12w400SmokyGrey,
+                                ),
+                                const CustomSizedBox(width: 8),
+                                Text(
+                                  addUpdateTasksController.setDateTime(),
+                                  style: AppTextStyles.f12w400SmokyGrey
+                                      .copyWith(fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         const CustomSizedBox(height: 12),
                         AppTextField(
                           controller:

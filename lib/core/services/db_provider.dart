@@ -29,7 +29,9 @@ class DBProvider {
       (id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
       description TEXT,
-      status TEXT NOT NULL)''',
+      status TEXT NOT NULL,
+      createdAt TEXT,
+      updatedAt TEXT)''',
     );
   }
 
