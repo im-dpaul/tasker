@@ -69,12 +69,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: getColor(
                             tasksController.tasksList[index].status ?? ''),
                         onTap: () async {
-                          tasksController.setEnableSelection(value: false);
-                          final value = await Navigator.of(context).pushNamed(
-                              AppRoutes.addUpdateTasksScreen,
-                              arguments: tasksController.tasksList[index]);
-                          if (value == true) {
-                            tasksController.getTasks();
+                          if (tasksController.enableSelection.value) {
+                            tasksController.addToSelectedList(
+                                tasksController.tasksList[index].id ?? 0);
+                          } else {
+                            final value = await Navigator.of(context).pushNamed(
+                                AppRoutes.addUpdateTasksScreen,
+                                arguments: tasksController.tasksList[index]);
+                            if (value == true) {
+                              tasksController.getTasks();
+                            }
                           }
                         },
                         onLongPress: () {

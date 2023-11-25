@@ -86,7 +86,7 @@ class AddUpdateTasksController extends GetxController {
   }
 
   checkValidation() {
-    if (titleController.text.isNotEmpty) {
+    if (titleController.text.trim().isNotEmpty) {
       validated.value = true;
     } else {
       validated.value = false;
@@ -98,12 +98,19 @@ class AddUpdateTasksController extends GetxController {
     return currentUtcTime.toString();
   }
 
+  Future<bool> shareTask() async {
+    String taskText =
+        [titleController.text, descriptionController.text].join('\n');
+    bool shareResult = await shareData(taskText, subject: titleController.text);
+    return shareResult;
+  }
+
   Future<bool> addTask() async {
     try {
       await dbProvider.insert(
         TasksModel(
-          title: titleController.text,
-          description: descriptionController.text,
+          title: titleController.text.trim(),
+          description: descriptionController.text.trim(),
           status: taskStatus.value,
           createdAt: getCurrentTime(),
         ),
@@ -121,8 +128,8 @@ class AddUpdateTasksController extends GetxController {
       await dbProvider.update(
         TasksModel(
           id: taskId.value,
-          title: titleController.text,
-          description: descriptionController.text,
+          title: titleController.text.trim(),
+          description: descriptionController.text.trim(),
           status: taskStatus.value,
           createdAt: createdAt.value,
           updatedAt: getCurrentTime(),

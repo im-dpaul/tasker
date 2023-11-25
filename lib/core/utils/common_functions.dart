@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tasker/core/constants/constants.dart';
 import 'package:tasker/core/theme/app_colors.dart';
 
@@ -49,4 +50,18 @@ String getDateTime(String date) {
   }
 
   return dateTime;
+}
+
+Future<bool> shareData(String text, {String? subject}) async {
+  try {
+    ShareResult shareResult =
+        await Share.shareWithResult(text, subject: subject);
+    if (shareResult.status == ShareResultStatus.success) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
 }

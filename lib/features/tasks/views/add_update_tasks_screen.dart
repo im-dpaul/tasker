@@ -47,16 +47,26 @@ class _AddUpdateTasksScreenState extends State<AddUpdateTasksScreen> {
               visible: (addUpdateTasksController.taskId.value != -1),
               child: Row(
                 children: [
-                  // const CustomSizedBox(width: 10),
-                  // GestureDetector(
-                  //   onTap: () {},
-                  //   child: const Icon(
-                  //     Icons.share_rounded,
-                  //     size: 24,
-                  //     color: AppColors.black,
-                  //   ),
-                  // ),
-                  // const CustomSizedBox(width: 16),
+                  const CustomSizedBox(width: 10),
+                  Visibility(
+                    visible: addUpdateTasksController.titleController.text
+                            .trim()
+                            .isNotEmpty ||
+                        addUpdateTasksController.descriptionController.text
+                            .trim()
+                            .isNotEmpty,
+                    child: GestureDetector(
+                      onTap: () async {
+                        await addUpdateTasksController.shareTask();
+                      },
+                      child: const Icon(
+                        Icons.share_rounded,
+                        size: 24,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
+                  const CustomSizedBox(width: 16),
                   GestureDetector(
                     onTap: () async {
                       final result =
