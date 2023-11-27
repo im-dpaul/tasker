@@ -28,7 +28,10 @@ class DBProvider {
       '''CREATE TABLE tasks 
       (id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
-      description TEXT)''',
+      description TEXT,
+      status TEXT NOT NULL,
+      createdAt TEXT,
+      updatedAt TEXT)''',
     );
   }
 
@@ -52,6 +55,16 @@ class DBProvider {
       'tasks',
       where: 'id = ?',
       whereArgs: [id],
+    );
+  }
+
+  Future<void> deleteMany(List<int> idList) async {
+    Database? dbClient = await database;
+
+    await dbClient!.delete(
+      'tasks',
+      where: 'id IN (${List.filled(idList.length, '?').join(',')})',
+      whereArgs: idList,
     );
   }
 
